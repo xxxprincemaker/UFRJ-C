@@ -46,7 +46,7 @@ float media (EMPREGADO *colaborador, int funcionario, int *acima){
         aux = ((colaborador+i)->renda);
 
         if (aux > media){
-            *(acima)++;
+            *acima = *(acima) + 1;
         }
     }
     return media;
