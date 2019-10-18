@@ -167,5 +167,5 @@ void retiraPessoa(PESSOA agenda[], int x){
             b = 1;
         }
     }
-    agenda[x - 1] = NULL;
+    agenda[x - 1] = 0;
 }
