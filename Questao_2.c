@@ -31,6 +31,7 @@ void imprimeDados(PESSOA agenda[], int numPessoa);
 void mostraDados(PESSOA pessoa);
 void buscaPorMes(PESSOA agenda[],int tam);
 int encontraNome(PESSOA agenda[], int x);
+void ordenaDados(PESSOA agenda[], int *tam);
 
 
 
@@ -110,8 +111,8 @@ void InserirPessoa(PESSOA agenda[], int *tam, int max){
 
 	recebeDADOS(agenda, quant);
 	*tam += quant;
+	ordenaDados(agenda, tam);
 }
-
 
 
 
@@ -176,8 +177,8 @@ void retiraPessoa(PESSOA agenda[], int *tam){
 	PESSOA temp = {};
     agenda[*tam - 1] = temp;
 	*tam--;
+	ordenaDados(agenda, tam);
 }
-
 
 
 void imprimeDados(PESSOA agenda[], int quant){
@@ -246,4 +247,19 @@ int encontraNome(PESSOA agenda[], int x){
 		}
 	}
 	printf("O nome digitado nao existe na agenda!\n");
+}
+
+void ordenaDados(PESSOA agenda[], int *tam){
+	int i, j;
+	PESSOA aux[*tam];
+
+	for (i = 1; i < *tam; i++){
+		for (j = 0; j < *tam - 1; j++){
+			if (strcmp(agenda[j].nome, agenda[j+1].nome) > 0){
+				aux[0] = agenda[j];
+				agenda[j] = agenda[j+1];
+				agenda[j+1] = aux[0];
+			}
+		}
+	}
 }
