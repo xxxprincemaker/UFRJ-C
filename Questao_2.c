@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 #include <stdlib.h>
 
 //Funcao Limpa a tela.
@@ -204,9 +203,13 @@ void retiraPessoa(PESSOA agenda[], int *tam){
 
 void imprimeDados(PESSOA agenda[], int quant){
     int i = 0;
-	for(i=0; i<quant; i++){
-		printf("\nCONTATO %d\n\n", i+1);
-		mostraDados(agenda[i]);
+	if (quant != 0){
+		for(i=0; i<quant; i++){
+			printf("\nCONTATO %d\n\n", i+1);
+			mostraDados(agenda[i]);
+		}
+	}else{
+		printf("Digite algum contato, para exibir.\n");
 	}
 }
 
