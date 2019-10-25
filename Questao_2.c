@@ -1,5 +1,12 @@
-#include<stdio.h>
-#include<string.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+//Funcao Limpa a tela.
+void clrscr(){
+    system("@cls||clear");
+}
 
 typedef struct ENDERECO{
 	char rua[100], comple[30], bairro[50], cep[10];
@@ -29,8 +36,8 @@ void recebeDADOS(PESSOA agenda[], int x);
 void retiraPessoa(PESSOA agenda[], int *tam);
 void imprimeDados(PESSOA agenda[], int numPessoa);
 void mostraDados(PESSOA pessoa);
-void buscaPorMes(PESSOA agenda[],int tam);
-int encontraNome(PESSOA agenda[], int x);
+void buscaPorMes(PESSOA agenda[],int *tam);
+int encontraNome(PESSOA agenda[], int *x);
 void ordenaDados(PESSOA agenda[], int *tam);
 
 
@@ -49,9 +56,8 @@ int main(){
 
 	PESSOA agenda[npessoas];
 
+	clrscr();
     menu(agenda, &tam, npessoas);
-	encontraNome(agenda, tam);
-	buscaPorMes(agenda, tam);
     
 	return 0;
 }
@@ -60,32 +66,47 @@ void menu(PESSOA agenda[], int *tam, int max){
 	char opcao;
 
 	do{
-		printf("\n1- Inserir pessoa;\n");	
-		printf("2- Deletar pessoa;\n");
-		printf("3- Imprimir agenda;\n");
-		printf("4- Sair.\n\n");
+		printf("\n1 - Inserir pessoa\n");	
+		printf("2 - Deletar pessoa\n");
+		printf("3 - Imprimir agenda\n");
+		printf("4 - Buscar Aniversariantes\n");
+		printf("5 - Buscar Pessoa\n");
+		printf("6 - Sair\n\n");
 
 		while(1){
 			printf("Escolha uma opção: ");
 			scanf(" %c", &opcao);
 			
-			if(opcao>='1' && opcao<='4')
+			if(opcao>='1' && opcao<='6')
 				break;
-
+			
+			clrscr();
 			printf("A opção não é válida!\n\n");	
 		}
 
 		switch(opcao){
 			case '1':
+				clrscr();
 				InserirPessoa(agenda, tam, max);
 				break;
 
 			case '2':
+				clrscr();
 				retiraPessoa(agenda, tam);
 				break;
 
 			case '3':
+				clrscr();
 				imprimeDados(agenda, *tam);
+				break;
+			case '4':
+				clrscr();
+				buscaPorMes(agenda, tam);
+				break;
+
+			case '5':
+				clrscr();
+				encontraNome(agenda, tam);
 				break;
 
 			default:
@@ -176,7 +197,7 @@ void retiraPessoa(PESSOA agenda[], int *tam){
     }
 	PESSOA temp = {};
     agenda[*tam - 1] = temp;
-	*tam--;
+	(*tam)--;
 	ordenaDados(agenda, tam);
 }
 
@@ -209,44 +230,58 @@ void mostraDados(PESSOA pessoa){
     printf("Observacoes: %s\n\n", pessoa.obs);
 }
 
-void buscaPorMes(PESSOA agenda[], int tam){
-    int i, mesAniver, diaAniver;
-	printf("Digite o dia que deseja analisar(dois digitos):");
-	scanf("%d", &diaAniver);
-	printf("Digite os dados do mes que deseja analisar(dois digitos):");
-	scanf("%d", &mesAniver);
-    for(i = 0; i < tam; i++){
-        if(agenda[i].data.mes == mesAniver && agenda[i].data.dia == diaAniver){
-            imprimeDados(agenda, i);
-        }
-    }
+void buscaPorMes(PESSOA agenda[], int *tam){
+	//Esta Funcao ira encontrar todas as pessoas que fazem aniversario no mesmo mes e dia.
+	if (*tam != 0){
+		int i, mesAniver, diaAniver;
+		printf("Digite o dia que deseja analisar(dois digitos):");
+		scanf("%d", &diaAniver);
+		printf("Digite os dados do mes que deseja analisar(dois digitos):");
+		scanf("%d", &mesAniver);
+		for(i = 0; i < *tam; i++){
+			if(agenda[i].data.mes == mesAniver && agenda[i].data.dia == diaAniver){
+				imprimeDados(agenda, i);
+			}
+		}
+	}
+	else{
+		printf("Por favor, preencha a agenda antes de buscar por uma pessoa.\n");
+		return;
+	}
 }
 
-int encontraNome(PESSOA agenda[], int x){
+int encontraNome(PESSOA agenda[], int *x){
 	//Vou utilizar vetor pois quero percorrer a palavra.
 	char nome[255];
 	int i, j, aux;
-	printf("Digite o primeiro da pessoa que deseja encontrar:");
-	scanf(" %[^\n]s", nome);
-	for (i = 0; i < x; i++){
-		j = 0;
-		aux = 0;
-		// Um laco que vai comparando letra a letra, e nao pega o espaco, ele acaba em funcao do primeiro nome.
-		while (agenda[i].nome[j] == nome[j] && agenda[i].nome[j] != ' '){
-			aux++;//Conta para ver quantas letras tem em comum, fazendo letra a letra
-			if (j <= strlen(nome)){
-				if (aux == strlen(nome)){
-					//Vou colocar a funcao do felipe aqui.
-					imprimeDados(agenda, i);
-					return 0;
+	if (*x != 0){
+		printf("Digite o primeiro da pessoa que deseja encontrar:");
+		scanf(" %[^\n]s", nome);
+		for (i = 0; i < *x; i++){
+			j = 0;
+			aux = 0;
+			// Um laco que vai comparando letra a letra, e nao pega o espaco, ele acaba em funcao do primeiro nome.
+			while (agenda[i].nome[j] == nome[j] && agenda[i].nome[j] != ' '){
+				aux++;//Conta para ver quantas letras tem em comum, fazendo letra a letra
+				if (j <= strlen(nome)){
+					if (aux == strlen(nome)){
+						//Vou colocar a funcao do felipe aqui.
+						imprimeDados(agenda, i);
+						return 0;
+					}
+				}else{
+					break;
 				}
-			}else{
-				break;
+				j++;
 			}
-			j++;
 		}
+		printf("O nome digitado nao existe na agenda!\n");
+		return 0;
+	}else{
+		printf("Por favor, preencha a agenda antes de buscar por uma pessoa.\n");
+		return 0;
 	}
-	printf("O nome digitado nao existe na agenda!\n");
+	
 }
 
 void ordenaDados(PESSOA agenda[], int *tam){
