@@ -156,7 +156,13 @@ void InserePessoa(PESSOA agenda[], int *tam, int max){
 
 
 void RecebeDADOS(PESSOA agenda[], int quant, int tam){
-	int i, dia, mes, ano;
+
+	int i, j, dia, mes, ano, contador;
+    char *d,*m,*a;
+
+    if (!(d = (char*)malloc(2*sizeof(char)))) return 1;
+    if (!(m = (char*)malloc(2*sizeof(char)))) return 1;
+    if (!(a = (char*)malloc(4*sizeof(char)))) return 1;
 
 	for(i=0; i<quant; i++){
 		printf("\n\nCONTATO %d\n\n", tam+i+1);
@@ -167,9 +173,43 @@ void RecebeDADOS(PESSOA agenda[], int quant, int tam){
 		scanf(" %[^\n]s", agenda[tam+i].email);
 		
 		while(1){
-			printf("Data de aniversário(DD MM AA): ");
-			scanf("%d %d %d", &dia, &mes, &ano);
-			
+			printf("-Data de aniversário(DD MM AA)-\n");
+			//scanf("%d %d %d", &dia, &mes, &ano);
+
+            printf("Dia:");
+            scanf(" %[^\n]s", d);
+            printf("Mes:");
+            scanf(" %[^\n]s", m);
+            printf("Ano:");
+            scanf(" %[^\n]s", a);
+
+            contador = 0;
+            for (j = 0; j < 2; j++){
+                if (isdigit(*(d+j)) == 0){
+                    contador++;
+                }
+            }
+            if (contador == 0) dia = atoi(d);
+            else continue;
+
+            contador = 0;
+            for (j = 0; j < 2; j++){
+                if (isdigit(*(m+j)) == 0){
+                    contador++;
+                }
+            } 
+            if (contador == 0) mes = atoi(m);
+            else continue;
+
+            contador = 0;
+            for (j = 0; j < 2; j++){
+                if (isdigit(*(a+j)) == 0){
+                    contador++;
+                }
+            } 
+            if (contador == 0) ano = atoi(a);
+            else continue;
+
 			if(dia>0 && mes>0 && mes<13 && ano>=0){
 				if(mes!=2 && dia<=data[mes])
 					break;
@@ -234,6 +274,7 @@ void RecebeDADOS(PESSOA agenda[], int quant, int tam){
 			printf("\n\n-------------------------------------------------------\n");
 	}
 }
+
 
 
 void RetiraPessoa(PESSOA agenda[], int *tam){
