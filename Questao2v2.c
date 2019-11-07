@@ -28,7 +28,7 @@ typedef struct{
 void clrscr();
 void menu(PESSOA agenda[], int max);
 void InserePessoa(PESSOA agenda[], int *tam, int max);
-void RecebeDADOS(PESSOA agenda[], int x, int tam);
+int RecebeDADOS(PESSOA agenda[], int x, int tam);
 void RetiraPessoa(PESSOA agenda[], int *tam);
 void EncontraNome(PESSOA agenda[], int x);
 void BuscaPorData(PESSOA agenda[], int tam);
@@ -155,7 +155,7 @@ void InserePessoa(PESSOA agenda[], int *tam, int max){
 }
 
 
-void RecebeDADOS(PESSOA agenda[], int quant, int tam){
+int RecebeDADOS(PESSOA agenda[], int quant, int tam){
 
 	int i, j, dia, mes, ano, contador;
     char *d,*m,*a;
@@ -202,7 +202,7 @@ void RecebeDADOS(PESSOA agenda[], int quant, int tam){
             else continue;
 
             contador = 0;
-            for (j = 0; j < 2; j++){
+            for (j = 0; j < 4; j++){
                 if (isdigit(*(a+j)) == 0){
                     contador++;
                 }
@@ -273,6 +273,7 @@ void RecebeDADOS(PESSOA agenda[], int quant, int tam){
 		if(i != quant-1)
 			printf("\n\n-------------------------------------------------------\n");
 	}
+    return 0;
 }
 
 
